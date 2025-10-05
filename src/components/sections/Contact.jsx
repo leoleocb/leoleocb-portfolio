@@ -9,26 +9,42 @@ export const Contact = () => {
     message: "",
   });
 
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupSuccess, setPopupSuccess] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     emailjs
-      .sendForm(import.meta.env.VITE_SERVICE_ID,import.meta.env.VITE_TEMPLATE_ID, e.target, import.meta.env.VITE_PUBLIC_KEY)
+      .sendForm(
+        import.meta.env.VITE_SERVICE_ID,
+        import.meta.env.VITE_TEMPLATE_ID,
+        e.target,
+        import.meta.env.VITE_PUBLIC_KEY
+      )
       .then(() => {
-        alert("✅ Message sent successfully!");
+        setPopupMessage("✅ Message sent successfully!");
+        setPopupSuccess(true);
+        setShowPopup(true);
         setFormData({ name: "", email: "", message: "" });
       })
-      .catch(() => alert("❌ An error occurred, please try again later."));
+      .catch(() => {
+        setPopupMessage("❌ An error occurred. Please try again later.");
+        setPopupSuccess(false);
+        setShowPopup(true);
+      });
+
+    // Oculta el popup automáticamente después de 3.5 segundos
+    setTimeout(() => setShowPopup(false), 3500);
   };
 
   return (
     <section
       id="contact"
-      className="min-h-screen flex items-center justify-center py-20"
+      className="min-h-screen flex items-center justify-center py-20 relative"
     >
       <RevealOnScroll>
-        {/* mantenemos tu ancho original */}
         <div className="px-4 w-150">
           <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-green-500 to-cyan-400 bg-clip-text text-transparent text-center">
             Get In Touch
@@ -95,6 +111,21 @@ export const Contact = () => {
           </form>
         </div>
       </RevealOnScroll>
+
+      {/* Popup moderno */}
+      {showPopup && (
+        <div
+          className={`fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity z-50`}
+        >
+          <div
+            className={`p-6 rounded-xl shadow-xl ${
+              popupSuccess ? "bg-green-500/20 border border-green-400" : "bg-red-500/20 border border-red-400"
+            } text-white text-center w-[90%] max-w-sm animate-fadeIn`}
+          >
+            <p className="text-lg font-semibold">{popupMessage}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
