@@ -16,12 +16,28 @@ export const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Agregar fecha y hora en formato legible
+    const now = new Date();
+    const formattedTime = now.toLocaleString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
     emailjs
-      .sendForm(
-        "service_3fx2pcq",     
-        "template_qfyqv4b",    
-        e.target,
-        "_iKiiccFeAa4-3zTB"     
+      .send(
+        "service_3fx2pcq", // tu Service ID
+        "template_qfyqv4b", // tu Template ID
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          time: formattedTime, // 🔥 Se envía a EmailJS
+        },
+        "_iKiiccFeAa4-3zTB" // tu Public Key
       )
       .then(() => {
         setPopupMessage("✅ Message sent successfully!");
@@ -115,9 +131,7 @@ export const Contact = () => {
 
       {/* Popup moderno */}
       {showPopup && (
-        <div
-          className={`fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity z-50`}
-        >
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity z-50">
           <div
             className={`p-6 rounded-xl shadow-xl ${
               popupSuccess
