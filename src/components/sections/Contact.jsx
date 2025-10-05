@@ -18,10 +18,10 @@ export const Contact = () => {
 
     emailjs
       .sendForm(
-        import.meta.env.VITE_SERVICE_ID,
-        import.meta.env.VITE_TEMPLATE_ID,
+        "service_3fx2pcq",     
+        "template_qfyqv4b",    
         e.target,
-        import.meta.env.VITE_PUBLIC_KEY
+        "_iKiiccFeAa4-3zTB"     
       )
       .then(() => {
         setPopupMessage("✅ Message sent successfully!");
@@ -29,7 +29,8 @@ export const Contact = () => {
         setShowPopup(true);
         setFormData({ name: "", email: "", message: "" });
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("EmailJS Error:", error);
         setPopupMessage("❌ An error occurred. Please try again later.");
         setPopupSuccess(false);
         setShowPopup(true);
@@ -119,7 +120,9 @@ export const Contact = () => {
         >
           <div
             className={`p-6 rounded-xl shadow-xl ${
-              popupSuccess ? "bg-green-500/20 border border-green-400" : "bg-red-500/20 border border-red-400"
+              popupSuccess
+                ? "bg-green-500/20 border border-green-400"
+                : "bg-red-500/20 border border-red-400"
             } text-white text-center w-[90%] max-w-sm animate-fadeIn`}
           >
             <p className="text-lg font-semibold">{popupMessage}</p>
